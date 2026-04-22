@@ -25,16 +25,15 @@ export default function LoginPage() {
         <div className="relative max-w-lg space-y-8">
           <div className="space-y-4">
             <p className="text-xs font-medium uppercase tracking-wider text-primary-foreground/70">
-              Solution 01 · Demand forecasting &amp; inventory
+              Demand forecasting &amp; inventory
             </p>
             <h2 className="text-4xl font-semibold leading-tight tracking-tight">
-              A 5% lift in forecast accuracy frees millions in working capital
-              across 50 sites.
+              Demand forecasting that earns its keep on the balance sheet.
             </h2>
             <p className="text-base leading-relaxed text-primary-foreground/80">
               Predict chemical consumption by customer, plant, SKU, and season.
-              Recommend reorder points. Flag demand spikes and drops. On a
-              single ops dashboard.
+              Recommend reorder points and flag demand spikes or drops — all on
+              a single ops dashboard.
             </p>
           </div>
 
