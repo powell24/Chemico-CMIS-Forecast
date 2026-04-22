@@ -38,7 +38,7 @@ Companion to `docs/PRD.md`. Five iterations, demo-ready at the end of iteration 
 13. Create `src/lib/supabase/server.ts` (SSR client via `@supabase/ssr`) and `src/lib/supabase/client.ts` (browser client). Nothing else in them yet.
 14. Create `src/lib/redis.ts` — exports an Upstash client + a `withCache<T>(key: string, ttlSeconds: number, fn: () => Promise<T>)` helper. Implementation is real, not stubbed — we'll use it in iteration 3.
 15. Create `src/lib/openai.ts` — exports the Vercel AI SDK provider configured for OpenAI. Nothing else.
-16. Create `src/middleware.ts` — reads Supabase session cookie, redirects unauthed users from `/` to `/login`. Matcher config excludes `/login`, `/_next`, and static assets.
+16. Create `src/proxy.ts` (Next 16 renamed `middleware.ts` → `proxy.ts`; function name is `proxy`, runtime is `nodejs` only). Reads the Supabase session cookie, redirects unauthed users from `/` to `/login`, redirects authed users away from `/login`. Matcher config excludes `/_next`, static assets, and health endpoints.
 17. Create `src/app/(app)/layout.tsx` — auth-protected wrapper that hosts the sidebar + main content. Use shadcn `SidebarProvider` + `Sidebar`.
 18. Build the sidebar (`src/components/layout/app-sidebar.tsx`) — branded blue (sidebar tokens from theme), CMIS wordmark at the top, one live nav entry "Forecast" linking to `/`, user/email + Log out button at the bottom. No dead or "Coming soon" items.
 19. Create `src/app/(app)/page.tsx` — empty dashboard page with a single `<h1>Forecast</h1>` placeholder body. Real content comes in iteration 3.
