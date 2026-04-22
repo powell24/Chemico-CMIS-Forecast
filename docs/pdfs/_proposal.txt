@@ -1,0 +1,173 @@
+SALES PROPOSAL                            April 2026                                                                    ZAIGO
+
+Zaigo × Chemico Group
+
+AI Strategy Proposal
+
+5 High-ROI Opportunities to Lift EBITDA, Reduce Risk & Increase Valuation
+
+PREPARED FOR
+
+Powell
+April 2026
+
+Confidential · For Internal Use
+
+5 AI Opportunities at a Glance
+
+#               Opportunity                                    What It Does                        Primary ROI Driver
+                                                                                   Working capital + freight reduction
+          Demand Forecasting & Inventory  Predicts chemical usage by site, SKU &   Compliance labor + valuation risk
+01                                        season                                   Revenue retention + share-of-wallet
+                                                                                   Gross margin improvement
+          AI                              Instant answers from SDS, regs & SOPs    Service quality + retention
+
+02 Compliance & SDS Copilot               Scores accounts, flags risk, recommends
+                                          cross-sells
+          Customer Churn & Expansion
+03                                        Tracks lead times, price volatility &
+                                          substitutions
+          Engine
+                                          SOPs + product data on-demand for field
+          Procurement & Supplier Risk     teams
+04
+
+          Monitor
+
+          Field-Service & Tech Support
+05
+
+          Assistant
+
+Confidential -- For Internal Use Only                                                                                   Page 1
+SALES PROPOSAL                         April 2026           ZAIGO
+
+01 AI Demand Forecasting & Inventory Optimization
+
+  WHAT IT DOES                                               WHY IT MATTERS
+
+Predicts chemical consumption by customer, plant, SKU, and  · Cuts working capital -- excess inventory across 50 sites ties
+season. Recommends reorder points and flags sudden demand      up significant cash
+spikes or drops -- all visible in a single ops dashboard.
+                                                            · Eliminates stockouts -- prevents costly production disruptions
+                                                               for Fortune 100 customers
+
+                                                            · Reduces expedited freight -- the fastest-payback AI use case
+                                                               for an ops-heavy business
+
+ROI IMPACT
+
+Even a 5% improvement in forecast accuracy across Chemico's 50 sites can free up millions in working capital -- immediately visible on
+the balance sheet.
+
+Confidential -- For Internal Use Only                       Page 2
+SALES PROPOSAL                         April 2026                                      ZAIGO
+
+02 AI Compliance & SDS Intelligence Copilot
+
+WHAT IT DOES                                                           WHY IT MATTERS
+
+Ingests SDS sheets, product specs, regulatory docs, customer           · Saves dozens of labor hours per week currently spent on
+audits, and internal SOPs. Lets teams ask plain-English questions         manual compliance review
+like 'Which products require special disposal at this plant?' and get
+instant, cited answers.                                                · Reduces noncompliance risk across regulated industries --
+                                                                          aerospace, biopharma, government
+
+                                                                       · De-risks the business ahead of any equity transaction or buyer
+                                                                          due diligence
+
+ROI IMPACT
+
+Compliance exposure is a direct valuation risk. An AI copilot that documents and enforces compliance at every site protects enterprise
+value.
+
+Confidential -- For Internal Use Only                                                                                                   Page 3
+SALES PROPOSAL                         April 2026                                                             ZAIGO
+
+03 AI Customer Churn & Account Expansion Engine
+
+  WHAT IT DOES                                                  WHY IT MATTERS
+
+Scores every account by churn risk, detects order-pattern      · Protects gross margin -- retaining an existing account costs
+anomalies, and recommends next-best actions -- cross-sells in     far less than replacing it
+process chemicals, water treatment, or service expansions --
+before a customer quietly walks away.                          · Grows share-of-wallet in sticky B2B relationships where
+                                                                  Chemico already has trust
+
+                                                               · Surfaces early warning signals that reps currently miss until
+                                                                  it's too late
+
+ROI IMPACT
+For a $175M+ revenue business, even a 2% improvement in retention equals $3.5M+ in protected annual revenue.
+
+Confidential -- For Internal Use Only                                                                         Page 4
+SALES PROPOSAL                         April 2026                                                                  ZAIGO
+
+04 AI Procurement & Supplier Risk Monitor
+
+  WHAT IT DOES                                                       WHY IT MATTERS
+
+Tracks supplier lead-time variability, price volatility, and        · Improves gross margin -- catches cost spikes before they hit
+substitution options in real time. Alerts procurement when margins     the P&L;
+are eroding or a supply source is constrained -- and recommends
+equivalent alternatives from the DuBois portfolio.                  · Strengthens supply resilience -- reduces single-source
+                                                                       exposure across 50 locations
+
+                                                                    · Leverages the DuBois partnership -- AI maps substitutions
+                                                                       across the combined catalog
+
+ROI IMPACT
+Better procurement intelligence directly translates to margin improvement -- the clearest EBITDA lever available.
+
+Confidential -- For Internal Use Only                                                                              Page 5
+SALES PROPOSAL                         April 2026                                                                                     ZAIGO
+
+05 AI Field-Service & Technical Support Assistant
+
+WHAT IT DOES                                                      WHY IT MATTERS
+
+Gives technicians and customer teams instant answers from         · Lowers service cost -- faster resolution means fewer
+SOPs, product literature, and resolved support cases -- with         escalations and callbacks
+citations. Drafts customer-ready responses and makes newer staff
+perform like experienced veterans.                                · Improves customer experience -- Chemico's competitive
+                                                                     edge is technical service quality
+
+                                                                  · Scales institutional knowledge -- 35 years of expertise made
+                                                                     searchable and accessible
+
+ROI IMPACT
+
+Chemico's value proposition is technical, not just transactional. AI that makes every technician more effective directly strengthens
+customer retention.
+
+Confidential -- For Internal Use Only                                                                                                 Page 6
+SALES PROPOSAL                         April 2026                                                                                     ZAIGO
+
+5  Most Recommended
+
+If Chemico can only start with two, lead with these. Together they create the fastest, most defensible path from AI investment to
+measurable EBITDA improvement.
+
+01 Demand Forecasting & Inventory AI
+
+This is the fastest-payback use case. Chemico manages chemicals across 50 sites -- even a modest improvement in forecast
+accuracy frees up working capital and eliminates costly stockouts. CFOs and ops leaders immediately understand it because it
+ties directly to cash flow. It's also the easiest to demo with existing ERP data.
+
+Reduced working capital · Fewer stockouts · Lower expedited freight
+
+02 Compliance & SDS Intelligence Copilot
+
+Compliance exposure is a direct valuation risk -- especially across the regulated industries Chemico serves (aerospace,
+biopharma, government). An SDS copilot saves hours of manual review per week and documents compliance at every site. If
+Leon is thinking about any future equity event, this de-risks the business in a way that buyers and boards immediately value.
+
+Lower compliance labor · Reduced noncompliance risk · Valuation protection
+
+DEMO STRATEGY
+
+Show demand/inventory AI first -- it's tangible and ties to cash flow. Then show the compliance copilot as the risk-reduction layer.
+Together they tell a single story: better operations, lower risk, higher valuation.
+
+Confidential -- For Internal Use Only                                                                                                 Page 7
+
