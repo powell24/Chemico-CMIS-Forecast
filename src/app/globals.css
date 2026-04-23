@@ -182,3 +182,47 @@
     opacity: 0.6;
   }
 }
+
+@keyframes cmis-float-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(28px, -20px) scale(1.05); }
+}
+
+@keyframes cmis-float-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-24px, 18px) scale(1.04); }
+}
+
+@keyframes cmis-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 22px 22px; }
+}
+
+@keyframes cmis-spin-slow {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+@keyframes cmis-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.cmis-float-a { animation: cmis-float-a 14s ease-in-out infinite; }
+.cmis-float-b { animation: cmis-float-b 18s ease-in-out infinite; }
+.cmis-drift   { animation: cmis-drift 60s linear infinite; }
+.cmis-spin-slow { animation: cmis-spin-slow 120s linear infinite; transform-origin: center; }
+.cmis-rise    { animation: cmis-rise 600ms ease-out both; }
+.cmis-rise-delay-1 { animation-delay: 120ms; }
+.cmis-rise-delay-2 { animation-delay: 240ms; }
+.cmis-rise-delay-3 { animation-delay: 360ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cmis-float-a,
+  .cmis-float-b,
+  .cmis-drift,
+  .cmis-spin-slow,
+  .cmis-rise {
+    animation: none !important;
+  }
+}
