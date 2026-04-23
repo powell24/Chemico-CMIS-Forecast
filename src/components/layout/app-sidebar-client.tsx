@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, Sparkles, TrendingUp } from "lucide-react";
+import { LayoutDashboard, LogOut, MapPin, Sparkles, TrendingUp } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -79,6 +79,17 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
                   <Link href="/scenarios" prefetch={false}>
                     <TrendingUp />
                     <span>Scenarios</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/sites")}
+                >
+                  <Link href="/sites" prefetch={false}>
+                    <MapPin />
+                    <span>Network</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
