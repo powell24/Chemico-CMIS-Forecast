@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -149,5 +151,34 @@
   }
   html {
     @apply font-sans;
+  }
+}
+
+@keyframes cmis-caret-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.cmis-caret {
+  display: inline-block;
+  width: 0.5em;
+  height: 0.95em;
+  vertical-align: text-bottom;
+  background: currentColor;
+  border-radius: 1px;
+  margin-left: 2px;
+  animation: cmis-caret-blink 1s steps(2, start) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cmis-caret {
+    animation: none;
+    opacity: 0.6;
   }
 }

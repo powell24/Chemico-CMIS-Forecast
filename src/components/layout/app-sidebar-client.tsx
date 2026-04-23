@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, Sparkles } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -34,12 +34,23 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/"}>
                   <Link href="/" prefetch={false}>
                     <LayoutDashboard />
-                    <span>Forecast</span>
+                    <span>Dashboard</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/chat")}
+                >
+                  <Link href="/chat" prefetch={false}>
+                    <Sparkles />
+                    <span>Ask CMIS</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -47,23 +58,37 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        <div className="flex flex-col gap-2">
-          {userEmail && (
+      <SidebarFooter className="gap-0 p-2">
+        {userEmail && (
+          <div className="mx-1 mb-1 flex items-center gap-2 rounded-md px-2 py-2">
             <span
-              className="text-xs text-sidebar-foreground/70 truncate"
-              title={userEmail}
+              className="flex size-8 shrink-0 items-center justify-center rounded-full bg-sidebar-accent text-sm font-semibold text-sidebar-accent-foreground"
+              aria-hidden
             >
-              {userEmail}
+              {userEmail.charAt(0).toUpperCase()}
             </span>
-          )}
-          <form action={logOutAction}>
-            <SidebarMenuButton type="submit" className="w-full">
-              <LogOut />
-              <span>Log out</span>
-            </SidebarMenuButton>
-          </form>
-        </div>
+            <div className="flex min-w-0 flex-col">
+              <span className="truncate text-xs font-medium text-sidebar-foreground">
+                Signed in
+              </span>
+              <span
+                className="truncate text-[11px] text-sidebar-foreground/60"
+                title={userEmail}
+              >
+                {userEmail}
+              </span>
+            </div>
+          </div>
+        )}
+        <form action={logOutAction}>
+          <SidebarMenuButton
+            type="submit"
+            className="w-full cursor-pointer text-sidebar-foreground/80 hover:!bg-destructive/80 hover:!text-sidebar-foreground focus-visible:!bg-destructive/80 focus-visible:!text-sidebar-foreground"
+          >
+            <LogOut />
+            <span>Log out</span>
+          </SidebarMenuButton>
+        </form>
       </SidebarFooter>
     </Sidebar>
   );
