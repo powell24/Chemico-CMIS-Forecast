@@ -7,20 +7,27 @@ import {
   ForecastSectionSkeleton,
   RecommendationsSectionSkeleton,
 } from "@/components/dashboard/section-skeletons";
+import { SectionErrorBoundary } from "@/components/dashboard/section-error-boundary";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <DashboardHeader />
-      <Suspense fallback={<KpiRowSkeleton />}>
-        <KpiRow />
-      </Suspense>
-      <Suspense fallback={<ForecastSectionSkeleton />}>
-        <ForecastSection />
-      </Suspense>
-      <Suspense fallback={<RecommendationsSectionSkeleton />}>
-        <RecommendationsSection />
-      </Suspense>
+      <SectionErrorBoundary label="KPIs">
+        <Suspense fallback={<KpiRowSkeleton />}>
+          <KpiRow />
+        </Suspense>
+      </SectionErrorBoundary>
+      <SectionErrorBoundary label="the forecast chart">
+        <Suspense fallback={<ForecastSectionSkeleton />}>
+          <ForecastSection />
+        </Suspense>
+      </SectionErrorBoundary>
+      <SectionErrorBoundary label="reorder recommendations">
+        <Suspense fallback={<RecommendationsSectionSkeleton />}>
+          <RecommendationsSection />
+        </Suspense>
+      </SectionErrorBoundary>
     </div>
   );
 }
