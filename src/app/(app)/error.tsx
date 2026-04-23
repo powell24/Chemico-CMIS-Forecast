@@ -16,7 +16,7 @@ export default function DashboardError({
   }, [error]);
 
   return (
-    <Card className="border-destructive/30">
+    <Card role="alert" className="border-destructive/30">
       <CardHeader>
         <CardTitle className="text-base">Couldn&apos;t load the dashboard</CardTitle>
       </CardHeader>

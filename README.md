@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CMIS Forecast
 
-## Getting Started
+Demand forecasting and inventory optimization mockup for **The Chemico Group**, corresponding to Solution #01 of Zaigo's AI strategy proposal. Covers the proposal's four dimensions — customer, plant, SKU, season — on a single ops dashboard, with an **Ask CMIS** chat copilot that answers CFO-style questions against the same data.
 
-First, run the development server:
+- **Stack**: Next.js 16 (App Router, Turbopack, React 19), Tailwind v4, shadcn/ui (Radix + Nova), Supabase (Postgres + Auth + RLS), Upstash Redis, Vercel AI SDK + OpenAI `gpt-4o-mini`.
+- **Scope**: mockup with deterministic seeded data. Single demo login. Light theme only.
+- **Out of scope**: PDF ingestion (Solution #02), real forecasting model, multi-tenant auth.
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+cp .env.example .env.local   # fill in real values
+pnpm seed                    # populate Supabase with deterministic mock data
+pnpm dev                     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Required environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+See `.env.example`. You need a Supabase project, an Upstash Redis database, and an OpenAI key.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Demo credentials
 
-## Learn More
+One account seeded in Supabase Auth. Ask the project owner for the demo email and password.
 
-To learn more about Next.js, take a look at the following resources:
+## What's in the build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `/login` — split-screen sign-in, email + password against Supabase Auth.
+- `/` — the forecasting dashboard: KPI row, forecast-vs-actual chart with dimension / timeline / seasonal toggles, reorder recommendations table.
+- `/chat` — Ask CMIS workspace with thread history and streaming tool-backed answers.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project layout
 
-## Deploy on Vercel
+```
+src/
+  app/
+    (app)/              auth-protected shell (sidebar + main)
+      page.tsx          dashboard
+      chat/page.tsx     Ask CMIS workspace
+      error.tsx         page-level error boundary
+    api/chat/route.ts   tool-backed streaming endpoint
+    login/              sign-in page + server action
+  components/
+    dashboard/          KPI row, forecast chart, reorder table
+    chat/               workspace, thread list, message, composer
+    layout/             server + client sidebar pair
+    ui/                 shadcn primitives (do not hand-edit)
+  lib/
+    queries/            cached Supabase reads via withCache
+    chat/               chat tools, session helpers
+    supabase/           server, client, middleware wrappers
+    redis.ts            Upstash client + withCache helper
+scripts/
+  seed.ts               deterministic mock data generator
+docs/
+  PRD.md                product requirements
+  iteration-plan.md     five-iteration build plan
+  theme-guide.md        Chemico tokens
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Reference docs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `docs/PRD.md` — product requirements
+- `docs/iteration-plan.md` — step-by-step build plan
+- `docs/theme-guide.md` — brand tokens
+- `docs/ui-ux-design-guide.md` — layout + interaction rules
+
+## Deploy
+
+Deployed to Vercel (`iad1` region). Configure every key from `.env.example` in the Vercel project. Seed the database once before first use.

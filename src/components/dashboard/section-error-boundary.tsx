@@ -23,7 +23,7 @@ export class SectionErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.error) {
       return (
-        <Card className="border-destructive/30">
+        <Card role="alert" className="border-destructive/30">
           <CardHeader>
             <CardTitle className="text-base">
               Couldn&apos;t load {this.props.label}

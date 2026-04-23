@@ -118,6 +118,9 @@ export const Message = memo(function Message({
   return (
     <div className="group/message w-full min-w-0 space-y-2">
       <div
+        role={message.streaming ? "status" : undefined}
+        aria-live={message.streaming ? "polite" : undefined}
+        aria-busy={message.streaming ? true : undefined}
         className={cn(
           "overflow-hidden rounded-lg border bg-card px-3 py-2 text-sm break-words [overflow-wrap:anywhere]",
           message.stopped && "border-dashed text-muted-foreground",
