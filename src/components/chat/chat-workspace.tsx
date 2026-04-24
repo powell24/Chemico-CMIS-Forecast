@@ -10,10 +10,28 @@ import {
   type ThreadSummary,
 } from "@/lib/chat/session";
 
+// Module-level: persists across route changes within a tab, but a full page
+// refresh re-evaluates the module and resets this to null — which matches the
+// requested UX (remember on nav, reset on refresh).
+let rememberedActiveId: string | null = null;
+
 export function ChatWorkspace() {
   const [threads, setThreads] = useState<ThreadSummary[]>([]);
-  const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeId, setActiveIdState] = useState<string | null>(
+    rememberedActiveId,
+  );
   const [loadingThreads, setLoadingThreads] = useState(true);
+
+  const setActiveId = useCallback(
+    (value: string | null | ((prev: string | null) => string | null)) => {
+      setActiveIdState((prev) => {
+        const next = typeof value === "function" ? value(prev) : value;
+        rememberedActiveId = next;
+        return next;
+      });
+    },
+    [],
+  );
 
   const refreshThreads = useCallback(async () => {
     try {
@@ -21,14 +39,14 @@ export function ChatWorkspace() {
       setThreads(next);
       setActiveId((prev) => {
         if (prev && next.some((t) => t.id === prev)) return prev;
-        return next[0]?.id ?? null;
+        return null;
       });
     } catch (err) {
       console.error("Failed to load threads:", err);
     } finally {
       setLoadingThreads(false);
     }
-  }, []);
+  }, [setActiveId]);
 
   useEffect(() => {
     void refreshThreads();
