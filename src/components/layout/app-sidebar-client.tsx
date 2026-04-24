@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   FileText,
+  FlaskConical,
   LayoutDashboard,
   LogOut,
   MapPin,
@@ -108,6 +109,17 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
                   <Link href="/orders">
                     <FileText />
                     <span>Orders</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/skus")}
+                >
+                  <Link href="/skus">
+                    <FlaskConical />
+                    <span>Catalog</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

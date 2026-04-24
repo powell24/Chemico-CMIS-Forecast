@@ -9,6 +9,8 @@ import {
   type DriverMetric,
   type HorizonDays,
 } from "@/lib/queries/chat";
+import { createClient } from "@/lib/supabase/server";
+import { getSdsForSku } from "@/lib/queries/sds";
 
 export type ToolCallLog = {
   name: string;
@@ -108,6 +110,42 @@ export function buildToolSet(log: ToolCallLog[]) {
         const result = await getSeasonalPattern(skuId);
         record("getSeasonalPattern", { skuId }, result ? 1 : 0);
         return result ?? { error: "SKU not found" };
+      },
+    }),
+
+    getSdsStatus: tool({
+      description:
+        "Safety Data Sheet status for a SKU, looked up by its code (e.g. 'DI-400'). Returns expiration status (valid/expiring/expired), days until expiry, GHS signal word (danger/warning), hazard codes, and PPE. Use for compliance questions like 'is the SDS current' or 'what PPE is required'.",
+      inputSchema: z.object({
+        skuCode: z
+          .string()
+          .describe("The SKU code to look up (e.g. 'DI-400', 'SV-100')."),
+      }),
+      async execute({ skuCode }) {
+        const supabase = await createClient();
+        const { data: sku, error } = await supabase
+          .from("skus")
+          .select("id")
+          .eq("code", skuCode)
+          .maybeSingle();
+        if (error || !sku) {
+          record("getSdsStatus", { skuCode }, 0);
+          return { error: `SKU '${skuCode}' not found.` };
+        }
+        const sds = await getSdsForSku(sku.id);
+        record("getSdsStatus", { skuCode }, sds ? 1 : 0);
+        if (!sds) return { error: `No SDS on file for ${skuCode}.` };
+        return {
+          skuCode: sds.skuCode,
+          skuName: sds.skuName,
+          category: sds.skuCategory,
+          status: sds.status,
+          daysUntilExpiry: sds.daysUntilExpiry,
+          expiresAt: sds.expiresAt,
+          signalWord: sds.signalWord,
+          hazardCodes: sds.hazardCodes,
+          ppe: sds.ppe,
+        };
       },
     }),
   };

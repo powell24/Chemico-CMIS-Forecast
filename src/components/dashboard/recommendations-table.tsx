@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
+  AlertTriangle,
   ChevronDown,
   ChevronsUpDown,
   ChevronUp,
   FileText,
   Plus,
+  ShieldAlert,
 } from "lucide-react";
 import {
   Card,
@@ -21,6 +23,10 @@ import type {
   SupplierOption,
   PoDashboardCounts,
 } from "@/lib/queries/purchase-orders";
+import type {
+  SdsCounts,
+  SdsExpirationStatus,
+} from "@/lib/queries/sds";
 import {
   Table,
   TableBody,
@@ -86,15 +92,22 @@ export function RecommendationsTable({
   filterOptions,
   suppliers,
   poCounts,
+  sdsStatusBySku,
+  sdsCounts,
 }: {
   rows: RecommendationRow[];
   filterOptions: FilterOptions;
   suppliers: SupplierOption[];
   poCounts: PoDashboardCounts;
+  sdsStatusBySku: Record<string, SdsExpirationStatus>;
+  sdsCounts: SdsCounts;
 }) {
   const [customer, setCustomer] = useState<string>("__all__");
   const [site, setSite] = useState<string>("__all__");
   const [status, setStatus] = useState<"__all__" | RecStatus>("__all__");
+  const [sdsFilter, setSdsFilter] = useState<
+    "__all__" | SdsExpirationStatus
+  >("__all__");
   const [sort, setSort] = useState<SortState>({
     key: "stockout",
     dir: "asc",
@@ -107,9 +120,13 @@ export function RecommendationsTable({
       if (customer !== "__all__" && r.customerId !== customer) return false;
       if (site !== "__all__" && r.siteId !== site) return false;
       if (status !== "__all__" && r.status !== status) return false;
+      if (sdsFilter !== "__all__") {
+        const s = sdsStatusBySku[r.skuId] ?? "valid";
+        if (s !== sdsFilter) return false;
+      }
       return true;
     });
-  }, [rows, customer, site, status]);
+  }, [rows, customer, site, status, sdsFilter, sdsStatusBySku]);
 
   const sorted = useMemo(() => {
     const copy = [...filtered];
@@ -158,6 +175,19 @@ export function RecommendationsTable({
     return c;
   }, [rows]);
 
+  const sdsFilterCounts = useMemo(() => {
+    const c: Record<SdsExpirationStatus, number> = {
+      valid: 0,
+      expiring: 0,
+      expired: 0,
+    };
+    for (const r of rows) {
+      const s = sdsStatusBySku[r.skuId] ?? "valid";
+      c[s] += 1;
+    }
+    return c;
+  }, [rows, sdsStatusBySku]);
+
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
   const pageRows = sorted.slice(
@@ -179,11 +209,15 @@ export function RecommendationsTable({
     setCustomer("__all__");
     setSite("__all__");
     setStatus("__all__");
+    setSdsFilter("__all__");
     setPage(0);
   }
 
   const hasActiveFilter =
-    customer !== "__all__" || site !== "__all__" || status !== "__all__";
+    customer !== "__all__" ||
+    site !== "__all__" ||
+    status !== "__all__" ||
+    sdsFilter !== "__all__";
   const from = sorted.length === 0 ? 0 : safePage * PAGE_SIZE + 1;
   const to = Math.min(sorted.length, (safePage + 1) * PAGE_SIZE);
 
@@ -198,16 +232,43 @@ export function RecommendationsTable({
             <CardDescription className="text-xs">
               Active stockout risk and reorder triggers across assigned SKUs.
             </CardDescription>
-            <Link
-              href="/orders"
-              className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground"
-            >
-              <FileText className="size-3" />
-              <span>
-                {poCounts.draft} in draft · {poCounts.sentThisWeek} sent this
-                week
-              </span>
-            </Link>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <Link
+                href="/orders"
+                className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground"
+              >
+                <FileText className="size-3" />
+                <span>
+                  {poCounts.draft} in draft · {poCounts.sentThisWeek} sent this
+                  week
+                </span>
+              </Link>
+              {(sdsCounts.expired > 0 || sdsCounts.expiring > 0) && (
+                <Link
+                  href={
+                    sdsCounts.expired > 0
+                      ? "/skus?sds=expired"
+                      : "/skus?sds=expiring"
+                  }
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-md border px-1.5 py-0.5 text-[11px]",
+                    sdsCounts.expired > 0
+                      ? "border-chart-5/30 bg-chart-5/10 text-chart-5"
+                      : "border-chart-3/30 bg-chart-3/10 text-chart-3",
+                  )}
+                >
+                  <ShieldAlert className="size-3" />
+                  <span>
+                    {sdsCounts.expired > 0
+                      ? `${sdsCounts.expired} SDS expired`
+                      : `${sdsCounts.expiring} SDS expiring`}
+                    {sdsCounts.expired > 0 && sdsCounts.expiring > 0
+                      ? ` · ${sdsCounts.expiring} expiring`
+                      : ""}
+                  </span>
+                </Link>
+              )}
+            </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Select
@@ -267,6 +328,29 @@ export function RecommendationsTable({
                 <SelectItem value="healthy">Healthy ({statusCounts.healthy})</SelectItem>
                 <SelectItem value="nearing">Nearing ({statusCounts.nearing})</SelectItem>
                 <SelectItem value="risk">At risk ({statusCounts.risk})</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={sdsFilter}
+              onValueChange={(v) => {
+                setSdsFilter(v as "__all__" | SdsExpirationStatus);
+                setPage(0);
+              }}
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="SDS status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__all__">All SDS ({rows.length})</SelectItem>
+                <SelectItem value="valid">
+                  SDS valid ({sdsFilterCounts.valid})
+                </SelectItem>
+                <SelectItem value="expiring">
+                  SDS expiring ({sdsFilterCounts.expiring})
+                </SelectItem>
+                <SelectItem value="expired">
+                  SDS expired ({sdsFilterCounts.expired})
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -347,7 +431,44 @@ export function RecommendationsTable({
                       >
                         <TableCell>
                           <div className="flex flex-col">
-                            <span className="font-medium">{r.skuCode}</span>
+                            <span className="flex items-center gap-1.5 font-medium">
+                              <Link
+                                href={`/skus/${encodeURIComponent(r.skuCode)}`}
+                                className="hover:underline"
+                              >
+                                {r.skuCode}
+                              </Link>
+                              {(() => {
+                                const s = sdsStatusBySku[r.skuId];
+                                if (s === "expired" || s === "expiring") {
+                                  return (
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <AlertTriangle
+                                          className={cn(
+                                            "size-3.5",
+                                            s === "expired"
+                                              ? "text-chart-5"
+                                              : "text-chart-3",
+                                          )}
+                                          aria-label={
+                                            s === "expired"
+                                              ? "SDS expired"
+                                              : "SDS expiring soon"
+                                          }
+                                        />
+                                      </TooltipTrigger>
+                                      <TooltipContent>
+                                        {s === "expired"
+                                          ? "SDS expired — verify before ordering."
+                                          : "SDS expires within 30 days."}
+                                      </TooltipContent>
+                                    </Tooltip>
+                                  );
+                                }
+                                return null;
+                              })()}
+                            </span>
                             <span className="text-xs text-muted-foreground">
                               {r.skuName}
                             </span>
