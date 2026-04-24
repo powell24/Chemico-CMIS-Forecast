@@ -218,12 +218,39 @@
 .cmis-rise-delay-2 { animation-delay: 240ms; }
 .cmis-rise-delay-3 { animation-delay: 360ms; }
 
+@keyframes cmis-mesh-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(40px, 30px) scale(1.08); }
+}
+@keyframes cmis-mesh-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(-36px, 28px) scale(1.06); }
+}
+@keyframes cmis-mesh-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(24px, -36px) scale(1.05); }
+}
+
+.cmis-mesh-a { animation: cmis-mesh-a 22s ease-in-out infinite; }
+.cmis-mesh-b { animation: cmis-mesh-b 26s ease-in-out infinite; }
+.cmis-mesh-c { animation: cmis-mesh-c 30s ease-in-out infinite; }
+
+@keyframes cmis-wave {
+  0%   { transform: translate(0, -50%); }
+  100% { transform: translate(-600px, -50%); }
+}
+.cmis-wave { animation: cmis-wave 40s linear infinite; }
+
 @media (prefers-reduced-motion: reduce) {
   .cmis-float-a,
   .cmis-float-b,
   .cmis-drift,
   .cmis-spin-slow,
-  .cmis-rise {
+  .cmis-rise,
+  .cmis-mesh-a,
+  .cmis-mesh-b,
+  .cmis-mesh-c,
+  .cmis-wave {
     animation: none !important;
   }
 }
