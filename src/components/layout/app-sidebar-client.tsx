@@ -3,7 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, LogOut, MapPin, Sparkles, TrendingUp } from "lucide-react";
+import {
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  MapPin,
+  Sparkles,
+  TrendingUp,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -54,7 +61,7 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
             <SidebarMenu className="gap-1">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/"}>
-                  <Link href="/" prefetch={false}>
+                  <Link href="/">
                     <LayoutDashboard />
                     <span>Dashboard</span>
                   </Link>
@@ -65,7 +72,7 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
                   asChild
                   isActive={pathname.startsWith("/chat")}
                 >
-                  <Link href="/chat" prefetch={false}>
+                  <Link href="/chat">
                     <Sparkles />
                     <span>Ask CMIS</span>
                   </Link>
@@ -76,7 +83,7 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
                   asChild
                   isActive={pathname.startsWith("/scenarios")}
                 >
-                  <Link href="/scenarios" prefetch={false}>
+                  <Link href="/scenarios">
                     <TrendingUp />
                     <span>Scenarios</span>
                   </Link>
@@ -87,9 +94,20 @@ export function AppSidebarClient({ userEmail }: { userEmail: string | null }) {
                   asChild
                   isActive={pathname.startsWith("/sites")}
                 >
-                  <Link href="/sites" prefetch={false}>
+                  <Link href="/sites">
                     <MapPin />
                     <span>Network</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/orders")}
+                >
+                  <Link href="/orders">
+                    <FileText />
+                    <span>Orders</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>

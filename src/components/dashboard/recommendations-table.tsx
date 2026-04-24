@@ -1,7 +1,14 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronsUpDown, ChevronUp } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronsUpDown,
+  ChevronUp,
+  FileText,
+  Plus,
+} from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,6 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { PoDraftDialog } from "@/components/orders/po-draft-dialog";
+import type {
+  SupplierOption,
+  PoDashboardCounts,
+} from "@/lib/queries/purchase-orders";
 import {
   Table,
   TableBody,
@@ -72,9 +84,13 @@ const PAGE_SIZE = 10;
 export function RecommendationsTable({
   rows,
   filterOptions,
+  suppliers,
+  poCounts,
 }: {
   rows: RecommendationRow[];
   filterOptions: FilterOptions;
+  suppliers: SupplierOption[];
+  poCounts: PoDashboardCounts;
 }) {
   const [customer, setCustomer] = useState<string>("__all__");
   const [site, setSite] = useState<string>("__all__");
@@ -84,6 +100,7 @@ export function RecommendationsTable({
     dir: "asc",
   });
   const [page, setPage] = useState(0);
+  const [poDialogRecId, setPoDialogRecId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     return rows.filter((r) => {
@@ -122,6 +139,24 @@ export function RecommendationsTable({
     });
     return copy;
   }, [filtered, sort]);
+
+  const customerCounts = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const r of rows) c.set(r.customerId, (c.get(r.customerId) ?? 0) + 1);
+    return c;
+  }, [rows]);
+
+  const siteCounts = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const r of rows) c.set(r.siteId, (c.get(r.siteId) ?? 0) + 1);
+    return c;
+  }, [rows]);
+
+  const statusCounts = useMemo(() => {
+    const c: Record<RecStatus, number> = { healthy: 0, nearing: 0, risk: 0 };
+    for (const r of rows) c[r.status] += 1;
+    return c;
+  }, [rows]);
 
   const pageCount = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const safePage = Math.min(page, pageCount - 1);
@@ -163,6 +198,16 @@ export function RecommendationsTable({
             <CardDescription className="text-xs">
               Active stockout risk and reorder triggers across assigned SKUs.
             </CardDescription>
+            <Link
+              href="/orders"
+              className="inline-flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground"
+            >
+              <FileText className="size-3" />
+              <span>
+                {poCounts.draft} in draft · {poCounts.sentThisWeek} sent this
+                week
+              </span>
+            </Link>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Select
@@ -176,12 +221,14 @@ export function RecommendationsTable({
                 <SelectValue placeholder="Customer" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all__">All customers</SelectItem>
-                {filterOptions.customers.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>
-                    {c.name}
-                  </SelectItem>
-                ))}
+                <SelectItem value="__all__">All customers ({rows.length})</SelectItem>
+                {filterOptions.customers
+                  .filter((c) => (customerCounts.get(c.id) ?? 0) > 0)
+                  .map((c) => (
+                    <SelectItem key={c.id} value={c.id}>
+                      {c.name} ({customerCounts.get(c.id) ?? 0})
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
             <Select
@@ -195,12 +242,14 @@ export function RecommendationsTable({
                 <SelectValue placeholder="Site" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all__">All sites</SelectItem>
-                {filterOptions.sites.map((s) => (
-                  <SelectItem key={s.id} value={s.id}>
-                    {s.name}
-                  </SelectItem>
-                ))}
+                <SelectItem value="__all__">All sites ({rows.length})</SelectItem>
+                {filterOptions.sites
+                  .filter((s) => (siteCounts.get(s.id) ?? 0) > 0)
+                  .map((s) => (
+                    <SelectItem key={s.id} value={s.id}>
+                      {s.name} ({siteCounts.get(s.id) ?? 0})
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
             <Select
@@ -214,10 +263,10 @@ export function RecommendationsTable({
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="__all__">All statuses</SelectItem>
-                <SelectItem value="healthy">Healthy</SelectItem>
-                <SelectItem value="nearing">Nearing</SelectItem>
-                <SelectItem value="risk">At risk</SelectItem>
+                <SelectItem value="__all__">All statuses ({rows.length})</SelectItem>
+                <SelectItem value="healthy">Healthy ({statusCounts.healthy})</SelectItem>
+                <SelectItem value="nearing">Nearing ({statusCounts.nearing})</SelectItem>
+                <SelectItem value="risk">At risk ({statusCounts.risk})</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -268,12 +317,13 @@ export function RecommendationsTable({
                     onSort={toggleSort}
                   />
                   <TableHead>Status</TableHead>
+                  <TableHead className="w-[100px] text-right">Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {pageRows.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="h-[360px]">
+                    <TableCell colSpan={8} className="h-[360px]">
                       <div className="flex flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
                         <p>No recommendations match — clear filters to see everything.</p>
                         {hasActiveFilter && (
@@ -355,11 +405,23 @@ export function RecommendationsTable({
                             </TooltipContent>
                           </Tooltip>
                         </TableCell>
+                        <TableCell className="text-right">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="h-7 gap-1 px-2 text-[11px]"
+                            onClick={() => setPoDialogRecId(r.id)}
+                            aria-label={`Create PO for ${r.skuCode} at ${r.siteName}`}
+                          >
+                            <Plus className="size-3" />
+                            Create PO
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                     {Array.from({ length: ghostCount }).map((_, i) => (
                       <TableRow key={`ghost-${i}`} aria-hidden>
-                        <TableCell colSpan={7}>
+                        <TableCell colSpan={8}>
                           <span className="invisible">—</span>
                         </TableCell>
                       </TableRow>
@@ -394,6 +456,14 @@ export function RecommendationsTable({
           </div>
         </div>
       </CardContent>
+      <PoDraftDialog
+        open={poDialogRecId !== null}
+        onOpenChange={(open) => {
+          if (!open) setPoDialogRecId(null);
+        }}
+        recommendationId={poDialogRecId}
+        suppliers={suppliers}
+      />
     </Card>
   );
 }

@@ -106,6 +106,14 @@ export function SiteWorkspace({
     return c;
   }, [summaries]);
 
+  const customerCounts = useMemo(() => {
+    const c = new Map<string, number>();
+    for (const s of summaries) {
+      for (const cid of s.customerIds) c.set(cid, (c.get(cid) ?? 0) + 1);
+    }
+    return c;
+  }, [summaries]);
+
   return (
     <div className="flex h-[calc(100svh-3rem)] flex-col gap-4">
       <header className="flex flex-wrap items-start justify-between gap-4">
@@ -127,12 +135,14 @@ export function SiteWorkspace({
               <SelectValue placeholder="Customer" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="__all__">All customers</SelectItem>
-              {customers.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.name}
-                </SelectItem>
-              ))}
+              <SelectItem value="__all__">All customers ({summaries.length})</SelectItem>
+              {customers
+                .filter((c) => (customerCounts.get(c.id) ?? 0) > 0)
+                .map((c) => (
+                  <SelectItem key={c.id} value={c.id}>
+                    {c.name} ({customerCounts.get(c.id) ?? 0})
+                  </SelectItem>
+                ))}
             </SelectContent>
           </Select>
           <Select
@@ -143,11 +153,11 @@ export function SiteWorkspace({
               <SelectValue placeholder="Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="risk">At risk</SelectItem>
-              <SelectItem value="nearing">Nearing</SelectItem>
-              <SelectItem value="healthy">Healthy</SelectItem>
-              <SelectItem value="unknown">No data</SelectItem>
+              <SelectItem value="all">All statuses ({summaries.length})</SelectItem>
+              <SelectItem value="risk">At risk ({counts.risk})</SelectItem>
+              <SelectItem value="nearing">Nearing ({counts.nearing})</SelectItem>
+              <SelectItem value="healthy">Healthy ({counts.healthy})</SelectItem>
+              <SelectItem value="unknown">No data ({counts.unknown})</SelectItem>
             </SelectContent>
           </Select>
         </div>
